@@ -1,2 +1,109 @@
-hello world
+<html>
+  <head>
+    <script src="clmtrackr.js"></script>
 
+    <style>
+      #camera, #canvas {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
+    </style>
+
+  </head>
+
+  <body>
+
+    <div>
+      <video id="camera" width="800" height="600" preload="auto" playsinline autoplay>
+      </video>
+      <canvas id="canvas" width="800" height="600"></canvas>
+    </div>
+
+    <script type="text/javascript">
+      navigator.getUserMedia({video : true}, (stream) => {
+        // console.log("success!");
+        var vid = document.getElementById("camera");
+        vid.srcObject = stream;
+      }, () => {
+        console.log("fail!");
+      });
+    </script>
+
+
+    <script>
+      var canvas = document.getElementById("canvas");
+      var context = canvas.getContext('2d');
+      // console.log("hi");
+
+      function begin() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.beginPath();
+      }
+      function dot(x, y) {
+        context.moveTo(x, y);
+        context.arc(x, y, 2, 0, 2 * Math.PI, false);
+      }
+      function end() {
+        context.closePath();
+        context.fillStyle = 'green';
+        context.fill();
+      }
+
+      begin();
+      dot(100, 100);
+      dot(200, 200);
+      end();
+
+      begin();
+      dot(100, 100);
+      dot(200, 200);
+      dot(300, 100);
+      dot(400, 200);
+      end();
+    </script>
+
+    <script type="text/javascript">
+      var camera = document.getElementById("camera");
+  
+      var ctracker = new clm.tracker();
+      ctracker.init();
+      ctracker.start(camera);
+
+      var canvas = document.getElementById("canvas");
+      var cc = canvas.getContext('2d');
+
+      function loop() {
+        requestAnimationFrame(loop);
+        // var positions = ctracker.getCurrentPosition();
+        // cc.clearRect(0, 0, canvas.width, canvas.height);
+        if (ctracker.getCurrentPosition()) {
+          // ctracker.draw(canvas);
+          // console.log(ctracker.getCurrentPosition());
+          begin();
+          for (let [x, y] of ctracker.getCurrentPosition()) {
+            // pain(x, y);
+            dot(x, y);
+          }
+          end();
+        }
+        // ctracker.draw(canvas);
+        // console.log(positions);
+        // positions = [[x_0, y_0], [x_1,y_1], ... ]
+        // do something with the positions ...
+      }
+
+      loop();
+
+    </script>
+
+
+<!--
+    <video id="inputVideo" width="400" height="300" autoplay loop>
+      <source src="./media/somevideo.ogv" type="video/ogg"/>
+    </video>
+-->
+
+  </body>
+
+</html>
