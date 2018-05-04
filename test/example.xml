@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0" xmlns:ar="http://www.w3.org/2018/AR">
+  <channel>
+    <title>Welcome to my AR feed!</title>
+    <link>http://sgo.to</link>
+    <description>Awesome AR tests!</description>
+    <item>
+      <title>My first AR artifact!</title>
+      <link>http://blog.sgo.to/2018/05/02/my-first-ar-artifact.html</link>
+      <description>Really simple AR artifact!</description>
+      <ar:artifact>
+        <ar:anchor selector="person[gender='male'] eye[right]"/>
+        <ar:asset src="model.gltf" />
+      </ar:artifact>
+    </item>
+  </channel>
+</rss>
