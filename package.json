@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/samuelgoto/arfeeds/issues"
   },
-  "homepage": "https://github.com/samuelgoto/arfeeds#readme"
+  "homepage": "https://github.com/samuelgoto/arfeeds#readme",
+  "dependencies": {
+    "htmldom": "^3.0.5"
+  }
 }
