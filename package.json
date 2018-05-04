@@ -1,0 +1,19 @@
+{
+  "name": "arfeeds",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samuelgoto/arfeeds.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samuelgoto/arfeeds/issues"
+  },
+  "homepage": "https://github.com/samuelgoto/arfeeds#readme"
+}
