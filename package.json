@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -w"
+    "test": "mocha -w",
+    "build": "watchify index.js -o docs/bundle.js -s module"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   "dependencies": {
     "feedparser": "^2.2.9",
     "htmldom": "^3.0.5",
-    "rss-parser": "^3.1.2"
+    "rss-parser": "^3.1.2",
+    "watchify": "^3.11.0"
   }
 }
