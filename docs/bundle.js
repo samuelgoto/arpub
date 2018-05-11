@@ -127,6 +127,9 @@ class Parser {
   let rss = await parser.parseString(content);
   for (let item of rss.items) {
    let artifact = item["ar:artifact"];
+
+   continue;
+
    let anchor = artifact["ar:anchor"][0];
    let attributes = anchor["$"];
    for (let [key, value] of Object.entries(attributes)) {

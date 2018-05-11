@@ -6,14 +6,13 @@
     <description>Awesome AR tests!</description>
     <item>
       <title>My first AR artifact!</title>
-      <link>http://blog.sgo.to/2018/05/02/my-first-ar-artifact.html</link>
+      <link>http://blog.sgo.to/2018/05/02/ar.html</link>
       <description>Really simple AR artifact!</description>
       <ar:artifact>
         <person>
           <face>
             <nose>
-              <asset type="text/html">
-                foo bar
+              <asset type="image/png" src="http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bed5.png">
               </asset>
             </nose>
           </face>
