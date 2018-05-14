@@ -124,11 +124,21 @@ async function main(feed) {
   }
  }
 
- let image = new Image();
- // image.style = "width: 100px, height: 100px";
- // image.width = "100px";
- // context.drawImage(image, nose.x - 25, nose.y - 25 * image.height / image.width, 50, 50 * image.height / image.width);
- image.src = "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bed5.png";
+  let asset = doc.querySelector("asset");
+  // let image = new Image();
+  let assets = [];
+
+  if (asset.attributes.type == "image/png") {
+   let src = asset.attributes.src;
+   // console.log(src);
+   let el = new Image();
+   el.src = src;
+   assets.push({
+     type: "image",
+     el: el,
+     parent: asset.parent
+   });
+  }
 
  function paint(doc) {
   if (!doc) {
@@ -173,6 +183,24 @@ async function main(feed) {
 
   marker(doc.querySelector("wrist[right]"), person);
   marker(doc.querySelector("wrist[left]"), person);
+
+  for (let asset of assets) {
+   if (asset.type == "image") {
+    let image = asset.el;
+    let parent = asset.parent;
+    // console.log(image);
+    // image.style = "width: 200px, height: 200px";
+    //console.log(image);
+    let width = 100;
+    context.drawImage(image,
+                      parent.x - (width / 2), 
+                      parent.y - (width / 2) * image.height / image.width, 
+                      width, // width
+                      width * image.height / image.width // height
+                      );
+   }
+  }
+
 
   end();
  }

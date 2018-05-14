@@ -34,7 +34,7 @@ describe("Doc tests", function(done) {
      });
   });
 
-  it.only("Object Model", function() {
+  it("Object Model", function() {
     let doc = new Document();
     let code = new Selector(`
       <person>
@@ -67,10 +67,12 @@ describe("Doc tests", function(done) {
 
     code.apply(doc);
 
-    assertThat(doc.querySelector("nose").asset).equals({
-      type: "text/html",
-      value: "foo bar",
-     });
+    assertThat(doc.querySelector("nose").children[0].name)
+     .equals("asset");
+    assertThat(doc.querySelector("nose").children[0].attributes)
+     .equals({
+       type: "text/html",
+    });
   });
 
   it("End to end", async function() {
@@ -78,11 +80,16 @@ describe("Doc tests", function(done) {
     let feed = await new Parser().parse(content);
     let doc = Document.from(feed);
 
-    assertThat(doc.querySelector("nose").asset).equals({
-      type: "image/png",
-      src: "nose.png",
-      value: "hello world"
-     });
+    assertThat(doc.querySelector("nose").children[0].name)
+     .equals("asset");
+    assertThat(doc.querySelector("nose").children[0].attributes)
+     .equals({
+       type: "image/png",
+        src: "nose.png",
+    });
+    assertThat(doc.querySelector("nose").children[0].children[0].value.trim())
+     .equals("hello world");
+
   });
 
   it("Positions", async function() {
