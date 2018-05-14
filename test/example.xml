@@ -12,8 +12,8 @@
         <person>
           <face>
             <nose>
-              <asset type="text/html">
-                foo bar
+              <asset type="image/png" src="nose.png">
+                hello world
               </asset>
             </nose>
           </face>

@@ -21,8 +21,8 @@ describe("Doc tests", function(done) {
            "face":[{
              "nose":[{
                "asset":[{
-                 "_": "\n                foo bar\n              ",
-                  "$":{"type":"text/html"}
+                 "_": "\n                hello world\n              ",
+                  "$":{"type":"image/png", "src": "nose.png"}
                }]
              }]
            }]
@@ -39,7 +39,7 @@ describe("Doc tests", function(done) {
     let code = new Selector(`
       <person>
         <eye right>
-          <asset type="image/png" src="node.png"></asset>
+          <asset type="image/png" src="nose.png"></asset>
         </eye>
       </person>
     `);
@@ -47,8 +47,8 @@ describe("Doc tests", function(done) {
     code.apply(doc);
 
     assertThat(doc.querySelector("eye[right]").asset).equals({
-      type: "text/html",
-      value: "hello world"
+      type: "image/png",
+      src: "nose.png",
      });
   });
 
@@ -66,57 +66,22 @@ describe("Doc tests", function(done) {
 
     assertThat(doc.querySelector("nose").asset).equals({
       type: "text/html",
-      value: "foo bar"
+      value: "foo bar",
      });
   });
 
-  it.only("End to end", async function() {
-    let parser = new Parser();
+  it("End to end", async function() {
     var content = fs.readFileSync('./test/example.xml', 'utf8');
-    let result = await parser.parse(content);
-    let artifact = result.items[0]["ar:artifact"];
-    
-    function walk(node) {
-     let result = "";
-     for (let [key, value] of Object.entries(node)) {
-      if (key == "_" || key == "$") {
-       continue;
-      }
-      // console.log(`key: ${key}`);
-      // console.log(`value: ${JSON.stringify(value)} `);
-      
-      let attributes = "";
-      if (node[key][0]["$"]) {
-       attributes = " " + Object.entries(node[key][0]["$"]).map(([key, value]) => `${key}="${value}"`).join(" ");
-      }
-      
-      result += `<${key}${attributes}>`;
-      if (node[key][0]["_"]) {
-       result += `${node[key][0]["_"]}`;
-      }
-      for (let child of value) {
-       // console.log(`child: ${JSON.stringify(child)}`);
-       result += walk(child);
-      }
-      result += `</${key}>`;
-     }
-     return result;
-    }
-
-    // console.log(artifact);
-    // console.log(JSON.stringify(artifact, 0, 2));
-    // console.log(walk(artifact));
-    let code = new Selector(walk(artifact));
-
-    let doc = new Document();
-    
-    code.apply(doc);
+    let feed = await new Parser().parse(content);
+    let doc = Document.from(feed);
 
     assertThat(doc.querySelector("nose").asset).equals({
-      type: "text/html",
-      value: "foo bar"
+      type: "image/png",
+      src: "nose.png",
+      value: "hello world"
      });
   });
+
 
   function assertThat(thiz) {
    return {

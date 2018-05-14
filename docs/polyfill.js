@@ -54,7 +54,9 @@ async function main(feed) {
  // console.log(feed);
  // console.log(Document);
  let rss = await new Parser().parse(feed);
- console.log(rss);
+ // console.log(rss);
+ let doc = Document.from(rss);
+ console.log(doc);
 
  let camera = document.getElementById("camera");
  let canvas = document.getElementById("canvas");

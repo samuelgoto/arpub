@@ -84,12 +84,63 @@ class Document {
    for (let i = 0; i < matches.length; i++) {
     let match = matches[i];
     // console.log(match);                                                                                                 
-    match.asset = {
-     type: asset.attributes.type,
-     value: asset.children[0].value.trim()
+    let resource = {};
+    if (asset.attributes.type) {
+     resource.type = asset.attributes.type;
     }
+    if (asset.attributes.src) {
+     resource.src = asset.attributes.src;
+    }
+    if (asset.children && 
+        asset.children.length > 0 &&
+        asset.children[0].value) {
+     resource.value = asset.children[0].value.trim()
+    }
+    match.asset = resource;
+     // }
    }
   }
+ }
+
+ static from(feed) {
+  const doc = new Document();
+  const artifact = feed.items[0]["ar:artifact"];
+
+  function walk(node) {
+   let result = "";
+   for (let [key, value] of Object.entries(node)) {
+    if (key == "_" || key == "$") {
+     continue;
+    }
+
+    // console.log(`key: ${key}`);                                                                                         
+    // console.log(`value: ${JSON.stringify(value)} `);                                                                    
+
+    let attributes = "";
+    if (node[key][0]["$"]) {
+     attributes = " " + Object.entries(node[key][0]["$"]).map(([key, value]) => `${key}="${value}"`).join(" ");
+    }
+
+    result += `<${key}${attributes}>`;
+    if (node[key][0]["_"]) {
+     result += `${node[key][0]["_"]}`;
+    }
+    for (let child of value) {
+     // console.log(`child: ${JSON.stringify(child)}`);                                                                    
+     result += walk(child);
+    }
+    result += `</${key}>`;
+   }
+   return result;
+  }
+
+  // console.log(artifact);                                                                                                
+  // console.log(JSON.stringify(artifact, 0, 2));                                                                          
+  // console.log(walk(artifact));                                                                                          
+  let code = new Selector(walk(artifact));
+  code.apply(doc);
+
+  return doc;
  }
 
  querySelectorAll(selector) {
