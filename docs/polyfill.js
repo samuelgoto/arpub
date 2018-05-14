@@ -54,7 +54,7 @@ async function main(feed) {
  // load the posenet model
  // let network = undefined;
  posenet.load().then((net) => {
-   loop2(net);
+   estimate(net);
   });
   
  var ctracker = new clm.tracker();
@@ -67,18 +67,21 @@ async function main(feed) {
 
  function loop() {
   requestAnimationFrame(loop);
-  paint(doc.position(pose.keypoints, 
-                    ctracker.getCurrentPosition()));
+  if (!doc.load(pose.keypoints, 
+                ctracker.getCurrentPosition())) {
+   return;
+  }
+  paint(doc);
  }
 
- function loop2(network) {
+ function estimate(network) {
   const imageScaleFactor = 0.2;
   const flipHorizontal = false;
   const outputStride = 16;
   network.estimateSinglePose(camera, imageScaleFactor, flipHorizontal, outputStride).then((data) => {
     pose = data;
    });
-  setTimeout(loop2.bind(this, network), 1000);
+  setTimeout(estimate.bind(this, network), 1000);
  }
 
  function begin() {
@@ -124,6 +127,7 @@ async function main(feed) {
  let image = new Image();
  // image.style = "width: 100px, height: 100px";
  // image.width = "100px";
+ // context.drawImage(image, nose.x - 25, nose.y - 25 * image.height / image.width, 50, 50 * image.height / image.width);
  image.src = "http://www.stickpng.com/assets/images/580b57fbd9996e24bc43bed5.png";
 
  function paint(doc) {
@@ -138,6 +142,8 @@ async function main(feed) {
   context.lineWidth = 0.2;
   context.setLineDash([1, 2]);
 
+  // TODO(goto): generalize this to make it person-agnostic.
+
   let person = doc.querySelector("person");
   marker(person);
   marker(doc.querySelector("face"), doc.querySelector("person"));
@@ -149,8 +155,6 @@ async function main(feed) {
 
   marker(doc.querySelector("eye[left]"), face);
   marker(doc.querySelector("eye[right]"), face);
-
-  // context.drawImage(image, nose.x - 25, nose.y - 25 * image.height / image.width, 50, 50 * image.height / image.width);
 
   marker(doc.querySelector("nose"), face);
  

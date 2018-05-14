@@ -34,7 +34,7 @@ describe("Doc tests", function(done) {
      });
   });
 
-  it("Object Model", function() {
+  it.only("Object Model", function() {
     let doc = new Document();
     let code = new Selector(`
       <person>
@@ -46,10 +46,13 @@ describe("Doc tests", function(done) {
 
     code.apply(doc);
 
-    assertThat(doc.querySelector("eye[right]").asset).equals({
-      type: "image/png",
-      src: "nose.png",
-     });
+    assertThat(doc.querySelector("eye[right]").children[0].name)
+     .equals("asset");
+    assertThat(doc.querySelector("eye[right]").children[0].attributes)
+     .equals({
+       type: "image/png",
+       src: "nose.png",
+    });
   });
 
   it("Nose", function() {
@@ -115,7 +118,7 @@ describe("Doc tests", function(done) {
     face[7] = f(7);
 
     // Applies the position.
-    doc.position(body, face);
+    doc.load(body, face);
 
     // Asserts that the position were set correctly.
     assertThat(doc.querySelector("shoulder[right]")).isAt(6, 6, 6);

@@ -3,7 +3,7 @@ const HtmlDom = require('htmldom');
 const RssParser = require('rss-parser');
 
 class Document {
- constructor(markup) {
+ constructor() {
   this.dom = new HtmlDom(`
       <person>
         <shoulder right />
@@ -26,40 +26,6 @@ class Document {
         </face>
       </person>
   `);  
- }
-
- load(model) {
- }
-
- static xml(node, level) {
-  let result = [];
-  let attributes = "";
-  if (node.attributes) {
-   attributes = " " + Object.entries(node.attributes).map(([key, value]) => {
-     if (value == null) {
-      return `${key}`
-     }
-     return `${key}=${value}`
-    }).join(" ");
-  }
-
-  if (node.type == "tag") {
-   result.push(`${"  ".repeat(level)}<${node.name}${attributes}>`);
-  }
-
-  if (node.asset) {
-   result.push(`${"  ".repeat(level)}[${node.asset.value}]`);
-  }
-
-  for (let child of node.children || []) {
-   if (child.type == "tag") {
-    result.push(Document.xml(child, level + 1));
-   }
-  }
-  if (node.type == "tag") {
-   result.push(`${"  ".repeat(level)}</${node.name}>`);
-  }
-  return result.join("\n");
  }
 
  apply(code) {
@@ -94,18 +60,23 @@ class Document {
     let match = matches[i];
     // console.log(match);                                                                                                 
     let resource = {};
-    if (asset.attributes.type) {
-     resource.type = asset.attributes.type;
-    }
-    if (asset.attributes.src) {
-     resource.src = asset.attributes.src;
-    }
-    if (asset.children && 
-        asset.children.length > 0 &&
-        asset.children[0].value) {
-     resource.value = asset.children[0].value.trim()
-    }
-    match.asset = resource;
+
+    // console.log(asset);
+    asset.parent = match;
+    match.children.push(asset);
+
+    //if (asset.attributes.type) {
+    // resource.type = asset.attributes.type;
+    //}
+    //if (asset.attributes.src) {
+    // resource.src = asset.attributes.src;
+    //}
+    //if (asset.children && 
+    //    asset.children.length > 0 &&
+    //    asset.children[0].value) {
+    // resource.value = asset.children[0].value.trim()
+    //}
+    // match.asset = resource;
      // }
    }
   }
@@ -160,7 +131,7 @@ class Document {
   return this.dom.$(selector)[0];
  }
 
- position(body, face) {
+ load(body, face) {
   if (!body || !face) {
    return null;
   }
@@ -211,8 +182,41 @@ class Document {
   return this;
  }
 
+ static xml(node, level) {
+  // console.log(node);
+
+  let result = [];
+  let attributes = "";
+  if (node.attributes) {
+   attributes = " " + Object.entries(node.attributes).map(([key, value]) => {
+     if (value == null) {
+      return `${key}`
+     }
+     return `${key}=${value}`
+    }).join(" ");
+  }
+
+  if (node.type == "tag") {
+   result.push(`${"  ".repeat(level)}<${node.name}${attributes}>`);
+  }
+
+  if (node.asset) {
+   result.push(`${"  ".repeat(level)}[${node.asset.value}]`);
+  }
+
+  for (let child of node.children || []) {
+   if (child.type == "tag") {
+    result.push(Document.xml(child, level + 1));
+   }
+  }
+  if (node.type == "tag") {
+   result.push(`${"  ".repeat(level)}</${node.name}>`);
+  }
+  return result.join("\n");
+ }
+
  toString() {
-  return xml(this.dom.dom, 0);
+  return Document.xml(this.dom.dom, 0);
  }
 }
 
