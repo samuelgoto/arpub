@@ -1,6 +1,3 @@
-
-# Problem
-
 The web is full of fantastic content, much of which is about the real world. At present though, there are limited ways to declaratively associate content on the web with some specific thing in the real world -- at best we can infer it based on things like address or captions on a photo. As the web evolves to support augmented reality and immersive computing, a way to explicitly associate content with specific real world **places** or **things** seems like a useful addition. In particular, having declarative associations would allow developers to affirmatively place content into the real world, and enable querying the corpus of web content to find relevant information about arbitrary physical places or things.
 
 The objective is to annotate content about real world with **landmarks**: place or thing descriptors. These landmark + content  associations together create immersive web **artifacts**, which can be discovered and composed into a variety of useful experiences. It is an explicit goal to enable artifacts on existing web content without requiring publishers to update their content.
