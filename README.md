@@ -47,9 +47,11 @@ For example, there is an infinite stream of new things being created in the worl
 
 We expect machine learning to play a big role in advancing landmark detection. So, for example, one user agent could create a landmark type that takes neural network training data sets as input and let that drive computer vision and landmark detection. Another one may invent a new file format for describing inference models and use that as an extensible way to detect things.
 
+## Built-in landmarks
+
 We want to harness the power of open systems to crowd-source ideas in areas where we don't know the answer. But as we get a better handle on what the answers are in this space we want to pave the cowpaths quickly, to create the gravity well and avoid confusion/fragmentation.
 
-With that in mind, in addition to an extensibility mechanism, we believe it is important to collect a set of well-known/well-established **built-in landmarks** that are enumerated, anticipated and baked for the most common types of associations publishers would make to get the ball rolling and start creating a [gravity well](https://hbr.org/2013/01/three-elements-of-a-successful-platform).
+With that in mind, in addition to an extensibility mechanism, we believe it is important to (as an ongoing process) collect a set of well-known/well-established **built-in landmarks** that are enumerated, anticipated and baked for the most common types of associations publishers would make to get the ball rolling and start creating a [gravity well](https://hbr.org/2013/01/three-elements-of-a-successful-platform).
 
 Some of the possible built-in landmarks are:
 
