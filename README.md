@@ -56,27 +56,27 @@ With that in mind, in addition to an extensibility mechanism, we believe it is i
 
 Some of the possible built-in landmarks are:
 
-*   GeoCoordinates, formed by
-    *    A pair of latitude and longitude (e.g. 40.741895, -73.989308)
-*   Postal addresses, formed by
-    *   The name (e.g. Google HQ)  
-    *   The street address (e.g. 1600 amphitheatre parkway)
-    *   The locality (e.g. mountain view)  
+*   **GeoCoordinates**, formed by
+    *    A pair of latitude and longitude (e.g. 37.4329° N, 122.0882° W)
+*   **Postal addresses**, formed by
+    *   The name (e.g. Shoreline Lake Boathouse)
+    *   The street address (e.g. 3160 N Shoreline Blvd)
+    *   The locality (e.g. Mountain View)  
     *   The region (e.g. CA)
     *   The postal code (e.g. 94043)
     *   The country (e.g. USA)
-*  Barcode landmark, QR code landmark
+*  **Barcode** landmark, **QR code** landmark
     *  A regex to match its content
-*   Text detection, formed by
+*   **Text** detection, formed by
     *  A regex to match its content
-*  Images detection, formed by
+*  **Images** detection, formed by
     *  An example image
-*  Facial shapes
+*  **Facial** shapes
 
-Another example of built-in landmarks are composite landmarks: landmarks that are designed to represent the composition/combination of more than one landmark (e.g. a car inside a specific dealership). The structure of a composite landmark includes:
+Another example of built-in landmarks are composite landmarks: landmarks that are designed to represent the composition/combination of more than one landmark (e.g. a car inside a specific dealership). The structure of a **composite landmark** includes:
 
--   A base landmark    
--   A nearby spatial restriction to apply
+-   A base **landmark**
+-   A **nearby** geo spatial restriction to apply
 
 ## Notation
 
@@ -114,4 +114,4 @@ An illustrative example of an JSON-LD AR Artifact
 </html>
 ```
 
-There is still a lot to be learned on the notation to be used and we are expecting that we'll learn more as we go.
+There is still a lot to be learned on the notation to be used and we are expecting that we'll learn a lot more about the requirements and options as we go.
