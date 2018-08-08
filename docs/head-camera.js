@@ -46,8 +46,8 @@ function main() {
  ctracker.init();
  ctracker.start(video);
 
- // let canvas = document.getElementById("canvas");
- // let context = canvas.getContext("2d");
+ let canvas = document.getElementById("canvas");
+ let context = canvas.getContext("2d");
 
  let warmup = [];
  let origin = {nose: {x: 0, y: 0}, z: 0};
@@ -92,8 +92,8 @@ function main() {
      z: baseline.z + zoom
    });
   }
-  // context.clearRect(0, 0, canvas.width, canvas.height);
-  // ctracker.draw(canvas);
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  ctracker.draw(canvas);
  }
  loop();
 }
