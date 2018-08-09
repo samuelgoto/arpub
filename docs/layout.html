@@ -18,16 +18,48 @@
   <script>
 AFRAME.registerComponent("layout", {
   schema: {
+    camera: {type: "string", default: "camera"},
     message: {type: "string", default: "Hello, World!"},
-    width: {type: "number", default: 0},
-    height: {type: "number", default: 0},
-    depth: {type: "number", default: 0},
+    width: {type: "number", default: 1},
+    height: {type: "number", default: 1},
+    depth: {type: "number", default: 1},
     x: {type: "number", default: 0},
     y: {type: "number", default: 0},
     z: {type: "number", default: 0},
     color: {type: "color", default: "#4CC3D9"}
   },
   init: function () {
+    console.log();
+    let camera = document.getElementById(this.data.camera);
+    camera.setAttribute("position", {
+      x: this.data.width / 2,
+      y: this.data.height / 2,
+      z: 10
+    });
+  },
+  update: function() {
+    console.log("updating");
+    console.log(this.el);
+
+    this.el.setAttribute("material", {
+      transparent: true,
+      opacity: 0.1,
+      color: "#4CC3D9"
+    });
+
+    this.el.setAttribute("geometry", {
+      primitive: "box",
+      depth: this.data.depth,
+      width: this.data.width,
+      height: this.data.height
+    });
+
+    this.el.setAttribute("position", {
+      x: this.data.width / 2,
+      y: this.data.height / 2,
+      z: this.data.depth / 2
+    });
+
     // console.log("init");
     // console.log(this.data.message);
     // console.log(this.el);
@@ -40,9 +72,7 @@ AFRAME.registerComponent("layout", {
       // console.log(geometry);
       x += geometry.width;
     }
-  },
-  update: function() {
-    // console.log("updating");
+
   },
   remove: function() {
     // console.log("removing");
@@ -51,8 +81,9 @@ AFRAME.registerComponent("layout", {
   </script>
 
   <a-scene>
-    <a-entity layout>
+    <a-entity layout="width: 3; height: 3; camera: camera;">
       <a-entity geometry="primitive: box" material="color:#000"></a-entity>
+      <!--
       <a-entity geometry="primitive: box" material="color:#111"></a-entity>
       <a-entity geometry="primitive: box" material="color:#222"></a-entity>
       <a-entity geometry="primitive: box" material="color:#333"></a-entity>
@@ -60,10 +91,11 @@ AFRAME.registerComponent("layout", {
       <a-entity geometry="primitive: box" material="color:#555"></a-entity>
       <a-entity geometry="primitive: box" material="color:#666"></a-entity>
       <a-entity geometry="primitive: box" material="color:#777"></a-entity>
+      -->
     </a-entity>
 
-    <a-entity position="0 0 10" rotation="0 0 0">
-      <a-camera fov="10" zoom="1"></a-camera>
+    <a-entity id="camera">
+      <a-camera fov="20" zoom="1"></a-camera>
     </a-entity>
 
   </a-scene>
