@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/0.8.0/aframe.min.js"></script>
+  </head>
+  <body>
+
+<!--
+    <a-scene>
+      <a-box position="0 0 -10" rotation="0 0 0" color="#4CC3D9">
+      </a-box>
+      <a-text color="#000000" position="1 0 -10" value="hello world"></a-text>
+      <a-entity position="0 0 0" rotation="0 0 0">
+        <a-camera fov="10" zoom="1"></a-camera>
+      </a-entity>
+    </a-scene>
+-->
+
+  <script>
+AFRAME.registerComponent("layout", {
+  schema: {
+    message: {type: "string", default: "Hello, World!"},
+    width: {type: "number", default: 0},
+    height: {type: "number", default: 0},
+    depth: {type: "number", default: 0},
+    x: {type: "number", default: 0},
+    y: {type: "number", default: 0},
+    z: {type: "number", default: 0},
+    color: {type: "color", default: "#4CC3D9"}
+  },
+  init: function () {
+    // console.log("init");
+    // console.log(this.data.message);
+    // console.log(this.el);
+    let x = 0;
+    for (let child of this.el.children) {
+      let geometry = child.getAttribute("geometry");
+      let position = child.getAttribute("position");
+      // console.log(position);
+      position.x = x;
+      // console.log(geometry);
+      x += geometry.width;
+    }
+  },
+  update: function() {
+    // console.log("updating");
+  },
+  remove: function() {
+    // console.log("removing");
+  }
+});
+  </script>
+
+  <a-scene>
+    <a-entity layout>
+      <a-entity geometry="primitive: box" material="color:#000"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#111"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#222"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#333"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#444"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#555"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#666"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#777"></a-entity>
+    </a-entity>
+
+    <a-entity position="0 0 10" rotation="0 0 0">
+      <a-camera fov="10" zoom="1"></a-camera>
+    </a-entity>
+
+  </a-scene>
+
+  </body>
+</html>
