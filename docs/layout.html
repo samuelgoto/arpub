@@ -63,16 +63,34 @@ AFRAME.registerComponent("layout", {
     // console.log("init");
     // console.log(this.data.message);
     // console.log(this.el);
-    let x = - this.data.width / 2;
-    let y = this.data.height / 2;
+    // let x = - this.data.width / 2;
+    // let y = this.data.height / 2;
+    let x = 0;
+    let y = 0;
+    let max = 0;
     for (let child of this.el.children) {
       let geometry = child.getAttribute("geometry");
       let position = child.getAttribute("position");
-      // console.log(position);
+
+      console.log(`position(${x}, ${y}) size(${geometry.width}, ${geometry.height})`);
+
+      max = Math.max(max, geometry.height);
+
+      // console.log(`${}`);
+      if ((x + geometry.width) > this.data.width) {
+        console.log(`block does not fit`);
+        x = 0;
+        // goes to the next line.
+        y -= max;
+      }
+
       x += geometry.width / 2;
       y -= geometry.height / 2;
-      position.x = x;
-      position.y = y;
+
+      // container(${this.data.width}, ${this.data.height})
+      position.x = (-this.data.width / 2) + x;
+      position.y = (this.data.height / 2) + y;
+
       x += geometry.width / 2;
       y += geometry.height / 2;
       // console.log(geometry);
@@ -90,13 +108,11 @@ AFRAME.registerComponent("layout", {
       <a-entity geometry="primitive: box" material="color:#000"></a-entity>
       <a-entity geometry="primitive: box" material="color:#111"></a-entity>
       <a-entity geometry="primitive: box" material="color:#222"></a-entity>
-      <!--
       <a-entity geometry="primitive: box" material="color:#333"></a-entity>
       <a-entity geometry="primitive: box" material="color:#444"></a-entity>
       <a-entity geometry="primitive: box" material="color:#555"></a-entity>
       <a-entity geometry="primitive: box" material="color:#666"></a-entity>
       <a-entity geometry="primitive: box" material="color:#777"></a-entity>
-      -->
     </a-entity>
 
     <a-entity id="camera">
