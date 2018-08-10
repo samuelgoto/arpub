@@ -76,10 +76,11 @@ AFRAME.registerComponent("div", {
   },
   onmount: function() {
     // console.log("mounted");
+    // console.log(this.el);
 
     if (!this.data.width && this.el.parentNode.hasAttribute("width")) {
       let width = this.el.parentNode.getAttribute("width");
-      console.log(`using parent's width ${width}`);
+      console.log(`using parent's width ${width} (${this.data.height})`);
       this.data.width = width;
       this.el.setAttribute("width", width);
     }
@@ -88,19 +89,10 @@ AFRAME.registerComponent("div", {
       child.components.div.onmount();
     }
 
-    //for (let component in this.el.components) {
-      //if (this.el.components[component].mounted) {
-        // console.log("mounting");
-        // console.log(this);
     this.el.components.div.mounted();
-      //}
-    //}
   },
   mounted: function() {
     // console.log("mounted");
-    // console.log(this);
-    // console.log(this.el.parentNode);
-    // console.log();
     this.update();
   },
   update: function() {
@@ -167,7 +159,7 @@ AFRAME.registerComponent("orthographic", {
     sceneEl.addEventListener("loaded", () => {
       this.originalCamera = sceneEl.camera;
       this.cameraParent = sceneEl.camera.parent;
-      this.orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1);
+      this.orthoCamera = new THREE.OrthographicCamera(-1.5, 1.5, 1.5, -1.5);
       this.cameraParent.add(this.orthoCamera);
       sceneEl.camera = this.orthoCamera;
     });
@@ -180,7 +172,41 @@ AFRAME.registerComponent("orthographic", {
 
   </script>
 
-  <a-scene embedded orthographic style="width: 600px; height: 300px;">
+  aframe rocks!
+
+  <style>
+    .foo {
+      border: 1px solid black;
+    }
+    .bar {
+      border: 1px solid red;
+      width: 200px;
+    }
+    .hello {
+      border: 1px solid green;
+    }
+    /*
+    body {
+      transform: perspective(400px) rotateY(45deg);
+      border: 1px solid black;
+      width: 200px;
+      height: 200px;
+    }
+    */
+  </style>
+
+  <div class="foo">
+    <div class="bar"></div>
+    <div class="hello"></div>
+  </div>
+
+  <div class="perspective">
+
+    hello world
+
+  </div>
+
+  <a-scene embedded orthographic style="width: 600px; height: 600px;">
     <a-entity html>
       <a-entity div="width: 3; height: 3; opacity: 0.1;">
         <a-entity div="width: 2; height: 1; opacity: 1; background_color: #000"></a-entity>
