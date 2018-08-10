@@ -4,48 +4,111 @@
   </head>
   <body>
 
-<!--
-    <a-scene>
-      <a-box position="0 0 -10" rotation="0 0 0" color="#4CC3D9">
-      </a-box>
-      <a-text color="#000000" position="1 0 -10" value="hello world"></a-text>
-      <a-entity position="0 0 0" rotation="0 0 0">
-        <a-camera fov="10" zoom="1"></a-camera>
-      </a-entity>
-    </a-scene>
--->
-
   <script>
-AFRAME.registerComponent("layout", {
+
+AFRAME.registerComponent("span", {
+  schema: {
+    "width": {type: "number", default: 1},
+    "height": {type: "number", default: 1},
+    "depth": {type: "number", default: 1},
+    "text_color": {type: "string", default: "#AAA"},
+    "text_align": {type: "string", default: "left"},
+    "background_color": {type: "color", default: "#4CC3D9"},
+    "content": {type: "string", default: ""}
+  },
+  update: function() {
+    // opacity: 0.1,
+    this.el.setAttribute("material", {
+      transparent: true,
+      color: this.data["background_color"]
+    });
+
+    this.el.setAttribute("geometry", {
+      primitive: "box",
+      depth: this.data.depth,
+      width: this.data.width,
+      height: this.data.height
+    });
+  }
+});
+
+AFRAME.registerComponent("html", {
+  schema: {
+    "width": {type: "number", default: 1},
+    "height": {type: "number", default: 1},
+    "background_color": {type: "color", default: "#4CC3D9"},
+  },
+  init: function() {
+    // console.log("hello from root");
+    for (let child of this.el.children) {
+      child.components.node.onmount();
+    }
+  }
+});
+
+AFRAME.registerComponent("node", {
+  onmount: function() {
+    // console.log("mounted");
+    for (let child of this.el.children) {
+      child.components.node.onmount();
+    }
+
+    for (let component in this.el.components) {
+      if (this.el.components[component].mounted) {
+        // console.log("mounting");
+        // console.log(this);
+        this.el.components[component].mounted();
+      }
+    }
+  }
+});
+
+AFRAME.registerComponent("div", {
   schema: {
     camera: {type: "string", default: "camera"},
     message: {type: "string", default: "Hello, World!"},
-    width: {type: "number", default: 1},
+    width: {type: "number"},
     height: {type: "number", default: 1},
     depth: {type: "number", default: 1},
     x: {type: "number", default: 0},
     y: {type: "number", default: 0},
     z: {type: "number", default: 0},
-    color: {type: "color", default: "#4CC3D9"}
+    opacity: {type: "number", default: 1},
+    background_color: {type: "color", default: "#4CC3D9"}
   },
   init: function () {
-    // console.log();
+    // console.log("initing");
     let camera = document.getElementById(this.data.camera);
     camera.setAttribute("position", {
       x: this.data.width / 2,
       y: this.data.height / 2,
       z: 10
     });
-  },
-  update: function() {
-    // console.log("updating");
-    // console.log(this.el);
 
     this.el.setAttribute("material", {
       transparent: true,
-      opacity: 0.1,
-      color: "#4CC3D9"
+      opacity: this.data.opacity,
+      color: this.data.background_color
     });
+
+    // console.log("setting attribute");
+    this.el.setAttribute("width", this.data.width);
+  },
+  mounted: function() {
+    // console.log("mounted");
+    // console.log(this);
+    // console.log(this.el.parentNode);
+    // console.log();
+    if (!this.data.width && this.el.parentNode.hasAttribute("width")) {
+      let width = this.el.parentNode.getAttribute("width");
+      // console.log(`using parent's width ${width}`);
+      this.data.width = width;
+    }
+    this.update();
+  },
+  update: function() {
+    // console.log("updating");
+    // console.log(this);
 
     this.el.setAttribute("geometry", {
       primitive: "box",
@@ -57,7 +120,7 @@ AFRAME.registerComponent("layout", {
     this.el.setAttribute("position", {
       x: this.data.width / 2,
       y: this.data.height / 2,
-      z: this.data.depth / 2
+      z: 0
     });
 
     // console.log("init");
@@ -69,20 +132,20 @@ AFRAME.registerComponent("layout", {
     let y = 0;
     let max = 0;
     for (let child of this.el.children) {
+
+      let block = !child.hasAttribute("span");
+
       let geometry = child.getAttribute("geometry");
       let position = child.getAttribute("position");
 
-      console.log(`position(${x}, ${y}) size(${geometry.width}, ${geometry.height})`);
-
-      max = Math.max(max, geometry.height);
-
-      // console.log(`${}`);
-      if ((x + geometry.width) > this.data.width) {
-        console.log(`block does not fit`);
+      if (block || (x + geometry.width) > this.data.width) {
+        // console.log(`block does not fit`);
         x = 0;
         // goes to the next line.
         y -= max;
       }
+
+      max = Math.max(max, geometry.height);
 
       x += geometry.width / 2;
       y -= geometry.height / 2;
@@ -95,7 +158,6 @@ AFRAME.registerComponent("layout", {
       y += geometry.height / 2;
       // console.log(geometry);
     }
-
   },
   remove: function() {
     // console.log("removing");
@@ -104,18 +166,72 @@ AFRAME.registerComponent("layout", {
   </script>
 
   <a-scene>
-    <a-entity layout="width: 3; height: 3; camera: camera;">
-      <a-entity geometry="primitive: box" material="color:#000"></a-entity>
-      <a-entity geometry="primitive: box" material="color:#111"></a-entity>
+
+    <a-entity html="width: 3; height: 3;">
+      <a-entity node div="width: 3; height: 3; opacity: 0.1;">
+        <a-entity node div="height: 1; opacity: 1; background_color: #333"></a-entity>
+      </a-entity>
+    </a-entity>
+
+    <!--
+    <a-entity div="width: 3; height: 3; opacity: 0.1;">
+      <a-entity span="width: 1; height: 1; opacity: 1; background_color: #000"></a-entity>
+      <a-entity div="width: 1; height: 1; opacity: 1; background_color: #333"></a-entity>
+      <a-entity div="width: 3; height: 1; opacity: 0.2; background_color: #555">
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #000"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #111"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #222"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #333"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #444"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #555"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #666"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #777"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #888"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #999"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #aaa"></a-entity>
+        <a-entity span="width: 0.5; height: 0.5; opacity: 1; background_color: #bbb"></a-entity>
+      </a-entity>
+    </a-entity>
+    -->
+
+    <!--
+    <a-entity div="width: 3; height: 3; opacity: 0.1;">
+      <a-entity div="width: 2; height: 2; opacity: 0.2;">
+        <a-entity div="width: 1; height: 1; opacity: 1; background_color: #000"></a-entity>
+        <a-entity div="width: 1; height: 1; opacity: 1; background_color: #333;"></a-entity>
+        <a-entity div="width: 1; height: 1; opacity: 1; background_color: #555;"></a-entity>
+        <a-entity div="width: 1; height: 1; opacity: 1; background_color: #777;"></a-entity>
+      </a-entity>
+      <a-entity div="width: 1; height: 1; opacity: 1; background_color: #999;"></a-entity>
+      <a-entity div="width: 1; height: 1; opacity: 1; background_color: #bbb;"></a-entity>
+    </a-entity>
+    -->
+
+    <!--
+    <a-entity div="width: 3; height: 3;">
+      <a-entity span="width: 1; height: 1; content: hello world; background_color: #000;"></a-entity>
+      <a-entity div="width: 1; height: 1; background_color: #000;"></a-entity>
+      <a-entity div="width: 1; height: 1; background_color: #111;"></a-entity>
+      <a-entity div="width: 1; height: 1; background_color: #222;"></a-entity>
+      <a-entity div="width: 1; height: 1; background_color: #333;"></a-entity>
+    </a-entity>
+    -->
+
+    <!--
+    <a-entity div="width: 3; height: 3;">
+      <a-entity div="" geometry="primitive: box" material="color:#000"></a-entity>
+      <a-entity layout2="" geometry="primitive: box" material="color:#111"></a-entity>
       <a-entity geometry="primitive: box" material="color:#222"></a-entity>
       <a-entity geometry="primitive: box" material="color:#333"></a-entity>
       <a-entity geometry="primitive: box" material="color:#444"></a-entity>
       <a-entity geometry="primitive: box" material="color:#555"></a-entity>
       <a-entity geometry="primitive: box" material="color:#666"></a-entity>
       <a-entity geometry="primitive: box" material="color:#777"></a-entity>
+      <a-entity geometry="primitive: box" material="color:#888"></a-entity>
     </a-entity>
+    -->
 
-    <a-entity id="camera">
+    <a-entity id="camera" position="1.5 1.5 10">
       <a-camera fov="20" zoom="1"></a-camera>
     </a-entity>
 
