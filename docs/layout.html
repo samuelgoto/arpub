@@ -34,31 +34,11 @@ AFRAME.registerComponent("span", {
 
 AFRAME.registerComponent("html", {
   schema: {
-    "width": {type: "number", default: 1},
-    "height": {type: "number", default: 1},
-    "background_color": {type: "color", default: "#4CC3D9"},
   },
   init: function() {
     // console.log("hello from root");
     for (let child of this.el.children) {
-      child.components.node.onmount();
-    }
-  }
-});
-
-AFRAME.registerComponent("node", {
-  onmount: function() {
-    // console.log("mounted");
-    for (let child of this.el.children) {
-      child.components.node.onmount();
-    }
-
-    for (let component in this.el.components) {
-      if (this.el.components[component].mounted) {
-        // console.log("mounting");
-        // console.log(this);
-        this.el.components[component].mounted();
-      }
+      child.components.div.onmount();
     }
   }
 });
@@ -94,16 +74,33 @@ AFRAME.registerComponent("div", {
     // console.log("setting attribute");
     this.el.setAttribute("width", this.data.width);
   },
+  onmount: function() {
+    // console.log("mounted");
+
+    if (!this.data.width && this.el.parentNode.hasAttribute("width")) {
+      let width = this.el.parentNode.getAttribute("width");
+      console.log(`using parent's width ${width}`);
+      this.data.width = width;
+      this.el.setAttribute("width", width);
+    }
+
+    for (let child of this.el.children) {
+      child.components.div.onmount();
+    }
+
+    //for (let component in this.el.components) {
+      //if (this.el.components[component].mounted) {
+        // console.log("mounting");
+        // console.log(this);
+    this.el.components.div.mounted();
+      //}
+    //}
+  },
   mounted: function() {
     // console.log("mounted");
     // console.log(this);
     // console.log(this.el.parentNode);
     // console.log();
-    if (!this.data.width && this.el.parentNode.hasAttribute("width")) {
-      let width = this.el.parentNode.getAttribute("width");
-      // console.log(`using parent's width ${width}`);
-      this.data.width = width;
-    }
     this.update();
   },
   update: function() {
@@ -163,13 +160,35 @@ AFRAME.registerComponent("div", {
     // console.log("removing");
   }
 });
+
+AFRAME.registerComponent("orthographic", {
+  init: function () {
+    var sceneEl = this.el.sceneEl;
+    sceneEl.addEventListener("loaded", () => {
+      this.originalCamera = sceneEl.camera;
+      this.cameraParent = sceneEl.camera.parent;
+      this.orthoCamera = new THREE.OrthographicCamera(-1, 1, 1, -1);
+      this.cameraParent.add(this.orthoCamera);
+      sceneEl.camera = this.orthoCamera;
+    });
+  },
+  remove: function () {
+    this.cameraParent.remove(this.orthoCamera);
+    sceneEl.camera = this.originalCamera;
+  }
+});
+
   </script>
 
-  <a-scene>
-
-    <a-entity html="width: 3; height: 3;">
-      <a-entity node div="width: 3; height: 3; opacity: 0.1;">
-        <a-entity node div="height: 1; opacity: 1; background_color: #333"></a-entity>
+  <a-scene embedded orthographic style="width: 600px; height: 300px;">
+    <a-entity html>
+      <a-entity div="width: 3; height: 3; opacity: 0.1;">
+        <a-entity div="width: 2; height: 1; opacity: 1; background_color: #000"></a-entity>
+        <a-entity div="width: 1; height: 1; opacity: 1; background_color: #111"></a-entity>
+        <a-entity div="height: 1; opacity: 0.5; background_color: #333">
+          <a-entity div="width: 0.5; height: 0.5; opacity: 1; background_color: #555"></a-entity>      
+          <a-entity div="height: 0.5; opacity: 1; background_color: #777"></a-entity>      
+        </a-entity>
       </a-entity>
     </a-entity>
 
