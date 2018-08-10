@@ -6,32 +6,6 @@
 
   <script>
 
-AFRAME.registerComponent("span", {
-  schema: {
-    "width": {type: "number", default: 1},
-    "height": {type: "number", default: 1},
-    "depth": {type: "number", default: 1},
-    "text_color": {type: "string", default: "#AAA"},
-    "text_align": {type: "string", default: "left"},
-    "background_color": {type: "color", default: "#4CC3D9"},
-    "content": {type: "string", default: ""}
-  },
-  update: function() {
-    // opacity: 0.1,
-    this.el.setAttribute("material", {
-      transparent: true,
-      color: this.data["background_color"]
-    });
-
-    this.el.setAttribute("geometry", {
-      primitive: "box",
-      depth: this.data.depth,
-      width: this.data.width,
-      height: this.data.height
-    });
-  }
-});
-
 AFRAME.registerComponent("html", {
   schema: {
   },
@@ -166,7 +140,7 @@ AFRAME.registerComponent("orthographic", {
   },
   remove: function () {
     this.cameraParent.remove(this.orthoCamera);
-    sceneEl.camera = this.originalCamera;
+    this.el.sceneEl.camera = this.originalCamera;
   }
 });
 
@@ -195,18 +169,7 @@ AFRAME.registerComponent("orthographic", {
     */
   </style>
 
-  <div class="foo">
-    <div class="bar"></div>
-    <div class="hello"></div>
-  </div>
-
-  <div class="perspective">
-
-    hello world
-
-  </div>
-
-  <a-scene embedded orthographic style="width: 600px; height: 600px;">
+  <a-scene embedded orthographic style="width: 300px; height: 300px;">
     <a-entity html>
       <a-entity div="width: 3; height: 3; opacity: 0.1;">
         <a-entity div="width: 2; height: 1; opacity: 1; background_color: #000"></a-entity>
