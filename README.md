@@ -16,7 +16,11 @@ Technically, authors need the infrastructure to make **associations** between re
 
 There is an increasing flow of innovation in landmark detection (e.g. computer vision enhancements) and asset formats (e.g. glTF), so it is important that the association is **unopinionated** about both specific landmarks and assets and enable/foster their independent evolution and **extension** in a de-coupled fashion without redesign of this layer (on ceilings and foundations).
 
-In this strawman, **publishers** that wish to syndicate their AR content to **aggregators** can **register** their **assets** to **landmarks** through **markup** on their webpages. That association can picked up by aggregators (through **crawling** in the case of search engines or direct **subscription** in the case of feed readers) and displayed to users along with the associations made by other publishers. We call the grouping of **assets** and **landmarks** an **artifact** which represents a single virtual object attached to the real world.
+In this strawman, **publishers** that wish to syndicate their AR content to **aggregators** can **register** their **assets** (content) to **landmarks** (what to attach the asset to), possibly/optionally under **restrictions**, through **markup** on their webpages.
+
+That association can picked up by aggregators (through **crawling** in the case of search engines or direct **subscription** in the case of feed readers) and displayed to users along with the associations made by other publishers.
+
+We call the grouping of **assets**, **landmarks** and **restrictions** an **artifact** which represents a single virtual object attached to the real world.
 
 ## Assets
 
@@ -47,7 +51,7 @@ For example, there is an infinite stream of new things being created in the worl
 
 We expect machine learning to play a big role in advancing landmark detection. So, for example, one user agent could create a landmark type that takes neural network training data sets as input and let that drive computer vision and landmark detection. Another one may invent a new file format for describing inference models and use that as an extensible way to detect things.
 
-## Built-in landmarks
+### Built-in landmarks
 
 We want to harness the power of open systems to crowd-source ideas in areas where we don't know the answer. But as we get a better handle on what the answers are in this space we want to pave the cowpaths quickly, to create the gravity well and avoid confusion/fragmentation.
 
@@ -72,10 +76,12 @@ Some of the possible built-in landmarks are:
     *  An example image
 *  **Facial** shapes
 
-Another example of built-in landmarks are composite landmarks: landmarks that are designed to represent the composition/combination of more than one landmark (e.g. a car inside a specific dealership). The structure of a **composite landmark** includes:
+## Restrictions
 
--   A base **landmark**
--   A **nearby** geo spatial restriction to apply
+You can apply **restrictions** to **artifacts**. The built-in restrictions available are:
+
+- **[DateRange](https://schema.org/temporalCoverage)** restriction (useful for ephemeral artifacts, e.g. promotional content)
+- **[GeoShape](https://schema.org/GeoShape)** restriction (useful for geofencing artifacts)
 
 ## Notation
 
